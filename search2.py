@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 import time
 import json
 
@@ -19,7 +20,7 @@ def search():
 
     time.sleep(3)
 
-    searchTextBox = driver.find_element_by_id('twotabsearchtextbox')
+    searchTextBox = driver.find_element(By.ID, 'twotabsearchtextbox')
     print(searchTextBox.tag_name)
 
 search()
