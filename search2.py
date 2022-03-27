@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from tarfile import LENGTH_NAME
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -30,9 +31,22 @@ def search():
         url = url + '?pagina=' + str(index)
         driver.get(url)
 
-        prueba = driver.find_element(By.CLASS_NAME, 'random-vehicles__vehicle')
-        print(prueba)
+        autos = driver.find_elements(By.CLASS_NAME, 'random-vehicles__vehicle')
+        for auto in autos:
+            # Botón para ver detalles específicos por auto
+            button = auto.find_element(By.CLASS_NAME, 'button')
+            button.click()
+            # Búsqueda detalles
+            modelo = driver.find_element(By.XPATH, '/html/body/form/div/div/div[1]/div[1]/div[1]/h1')
+            print(modelo.text)
 
+
+
+
+            driver.get(url)
+            print(driver.current_url)
+
+        url = 'https://veinsausados.com/buscar/'
         index += 1
 
 search()
