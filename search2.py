@@ -1,3 +1,4 @@
+from tarfile import LENGTH_NAME
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -6,7 +7,7 @@ import json
 
 # Search game in Amazon
 def search():
-    url = 'https://www.amazon.com/s?i=videogames-intl-ship&bbn=16225016011&rh=n%3A20972781011%2Cn%3A20972797011%2Cp_89%3APlaystation&dc&language=es&fst=as%3Aoff&pf_rd_i=16225016011&pf_rd_m=ATVPDKIKX0DER&pf_rd_p=e963b29d-d654-4995-bbb2-582c8cfbb5e4&pf_rd_r=0E6CBDMYSY2Z4QW1EYKE&pf_rd_s=merchandised-search-3&pf_rd_t=101&qid=1619289230&rnid=20972781011&ref=sr_nr_n_3'
+    url = 'https://veinsausados.com/buscar/'
 
     # Selenium
     options = webdriver.ChromeOptions()
@@ -20,7 +21,18 @@ def search():
 
     time.sleep(3)
 
-    searchTextBox = driver.find_element(By.ID, 'twotabsearchtextbox')
-    print(searchTextBox.tag_name)
+    # Cantidad de páginas
+    paginacion = driver.find_elements(By.CLASS_NAME, 'search-box__page-number')
+    
+    # Navegar entre páginas
+    index = 1
+    while index <= len(paginacion):
+        url = url + '?pagina=' + str(index)
+        driver.get(url)
+
+        prueba = driver.find_element(By.CLASS_NAME, 'random-vehicles__vehicle')
+        print(prueba)
+
+        index += 1
 
 search()
