@@ -1,10 +1,9 @@
-from asyncio.windows_events import NULL
-from tarfile import LENGTH_NAME
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException 
 import time
-import json
+
+link_detalles = []
 
 # Search game in Amazon
 def search():
@@ -28,25 +27,29 @@ def search():
     # Navegar entre páginas
     index = 1
     while index <= len(paginacion):
+        link_detalles = []
         url = url + '?pagina=' + str(index)
         driver.get(url)
 
         autos = driver.find_elements(By.CLASS_NAME, 'random-vehicles__vehicle')
         for auto in autos:
-            # Botón para ver detalles específicos por auto
-            button = auto.find_element(By.CLASS_NAME, 'button')
-            button.click()
-            # Búsqueda detalles
+            if(auto_vendido(auto, 'random-vehicles__sold') == False):
+                link = auto.find_element(By.CLASS_NAME, 'random-vehicles__vehicle-link').get_attribute("href")
+                link_detalles.append(link)
+
+        for link in link_detalles:
+            driver.get(link)
+
             modelo = driver.find_element(By.XPATH, '/html/body/form/div/div/div[1]/div[1]/div[1]/h1')
-            print(modelo.text)
-
-
-
-
-            driver.get(url)
-            print(driver.current_url)
 
         url = 'https://veinsausados.com/buscar/'
         index += 1
+
+def auto_vendido(object, classname):
+    try:
+        object.find_element(By.CLASS_NAME, classname)
+    except NoSuchElementException:
+        return False
+    return True
 
 search()
